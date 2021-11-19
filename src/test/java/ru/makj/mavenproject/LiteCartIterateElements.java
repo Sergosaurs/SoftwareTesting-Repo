@@ -18,7 +18,6 @@ public class LiteCartIterateElements {
 
     @Before
     public void setUp() {
-        System.setProperty("webdriver.chrome.driver", "C:\\chromedriver.exe");
         driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.manage().window().maximize();
@@ -29,15 +28,15 @@ public class LiteCartIterateElements {
         driver.get("http://localhost/litecart/admin");
         loginForm();
 
-        List<WebElement> externalElements = driver.findElements(By.cssSelector("ul#box-apps-menu"));
+        List<WebElement> externalElements = driver.findElements(By.cssSelector("ul#box-apps-menu li#app-"));
         for (int i = 0; i < externalElements.size(); i++) {
-            externalElements = driver.findElements(By.cssSelector("li#app-"));
+            externalElements = driver.findElements(By.cssSelector("ul#box-apps-menu li#app-"));
             mainList = externalElements.get(i);
             System.out.println("Click on menu tab: " + mainList.getText());
             mainList.click();
             titleChecker();
 
-            List<WebElement> internalElements = driver.findElements(By.cssSelector("ul[class*=docs]"));
+            List<WebElement> internalElements = driver.findElements(By.cssSelector("ul[class*=docs]  li"));
             for (int j = 0; j < internalElements.size(); j++) {
                 internalElements = driver.findElements(By.cssSelector("ul[class*=docs] li"));
                 innerList = internalElements.get(j);
