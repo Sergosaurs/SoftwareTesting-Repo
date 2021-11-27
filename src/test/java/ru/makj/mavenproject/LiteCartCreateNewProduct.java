@@ -3,6 +3,7 @@ package ru.makj.mavenproject;
 import org.junit.Assert;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -39,6 +40,7 @@ public class LiteCartCreateNewProduct extends AppTest {
 
         //Information tab
         click(By.cssSelector("a[href='#tab-information']"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("select[name=manufacturer_id]")));
         selectInDropDownList(By.cssSelector("select[name=manufacturer_id]"), "ACME Corp.");
 
         sendText(By.cssSelector("input[name=keywords]"), "Rubber Duck");
@@ -53,6 +55,7 @@ public class LiteCartCreateNewProduct extends AppTest {
 
         //Prices tab
         click(By.cssSelector("a[href='#tab-prices']"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input[name=purchase_price]")));
         sendText(By.cssSelector("input[name=purchase_price]"), "35");
         selectInDropDownList(By.cssSelector("select[name=purchase_price_currency_code]"), "Euros");
         sendText(By.name("prices[USD]"), "78");
