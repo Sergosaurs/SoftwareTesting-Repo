@@ -4,9 +4,11 @@ import com.github.javafaker.Faker;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -21,10 +23,11 @@ public class AppTest {
 
     @Before
     public void setUp() {
-        driver = new ChromeDriver();
+        driver = new FirefoxDriver();
+//        driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.manage().window().maximize();
-        wait = new WebDriverWait(driver, 15);
+        wait = new WebDriverWait(driver, 10);
     }
 
     @After
@@ -75,6 +78,21 @@ public class AppTest {
         if (!text.equals(fieldText)) {
             driver.findElement(locator).clear();
             driver.findElement(locator).sendKeys(text);
+        }
+    }
+    /**
+     * отправка текста в указанный элемент
+     *
+     * @param locator локатор
+     * @param text    текст
+     * @param key    клавиша
+     *
+     */
+    public void sendTextWithKey(By locator, String text, Keys key) {
+        String fieldText = driver.findElement(locator).getAttribute("value");
+        if (!text.equals(fieldText)) {
+            driver.findElement(locator).clear();
+            driver.findElement(locator).sendKeys(text, key);
         }
     }
 

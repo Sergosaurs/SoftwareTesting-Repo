@@ -2,6 +2,7 @@ package ru.makj.mavenproject;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
+import static org.openqa.selenium.Keys.ENTER;
 
 public class LiteCartNewUserRegistration extends AppTest {
 
@@ -21,7 +22,8 @@ public class LiteCartNewUserRegistration extends AppTest {
         sendText(By.cssSelector("input[name=postcode]"), userGenerator(5).get("postcode"));
         sendText(By.cssSelector("input[name=city]"), userGenerator().get("city"));
 
-        selectInDropDownList(By.cssSelector("select[name=country_code]"), "United States");
+        click(By.cssSelector("td span.select2-selection__arrow"));
+        sendTextWithKey(By.cssSelector("input.select2-search__field"), "United States", ENTER);
 
         password = userGenerator().get("password");
         email = userGenerator().get("email");
