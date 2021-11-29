@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 public class LiteCartCreateNewProduct extends AppTest {
 
-    String productName = "Cyan Duck";
+    String productName = userGenerator().get("productName") + userGenerator(3).get("randomNumber");
 
     @Test
     public void createProductTest() {
@@ -65,7 +65,7 @@ public class LiteCartCreateNewProduct extends AppTest {
         if (driver.findElement(By.linkText(productName)).isDisplayed()) {
             click(By.cssSelector("tr.row.semi-transparent input[type=checkbox]"));
             click(By.cssSelector("button[name=enable]"));
-            System.out.println("Product " + productName + " has been successfully added!");
+            System.out.println("Product '" + productName + "' has been successfully added!");
         } else Assert.fail("Product not found on page!!!");
     }
 }

@@ -106,6 +106,7 @@ public class AppTest {
         HashMap<String, String> user = new HashMap<>();
         user.put("taxId", String.valueOf(faker.number().randomNumber()));
         user.put("firstName", faker.name().firstName());
+        user.put("productName", faker.name().username());
         user.put("lastName", faker.name().lastName());
         user.put("streetAddress", faker.address().streetAddress());
         user.put("postcode", String.valueOf(faker.number().randomNumber()));
@@ -113,6 +114,7 @@ public class AppTest {
         user.put("email", faker.internet().emailAddress());
         user.put("password", faker.internet().password());
         user.put("phoneNumber", String.valueOf(faker.number().randomNumber()));
+        user.put("randomNumber", String.valueOf(faker.number().randomDigit()));
         return user;
     }
 
@@ -127,6 +129,7 @@ public class AppTest {
         HashMap<String, String> user = new HashMap<>();
         user.put("taxId", faker.number().digits(digits));
         user.put("firstName", faker.name().firstName());
+        user.put("productName", faker.name().username());
         user.put("lastName", faker.name().lastName());
         user.put("streetAddress", faker.address().streetAddress());
         user.put("postcode", faker.number().digits(digits));
@@ -134,6 +137,7 @@ public class AppTest {
         user.put("email", faker.internet().emailAddress());
         user.put("password", faker.internet().password());
         user.put("phoneNumber", faker.number().digits(digits));
+        user.put("randomNumber", String.valueOf(faker.number().digits(digits)));
         return user;
     }
 }
