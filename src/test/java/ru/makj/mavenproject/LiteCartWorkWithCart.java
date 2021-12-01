@@ -19,9 +19,9 @@ public class LiteCartWorkWithCart extends AppTest {
         driver.get("http://localhost/litecart/en/");
 
         int counter = 0;
-        WebElement cartPresent = null;
+        WebElement productTable;
 
-        while (counter != 10) {
+        while (counter != 3) {
             click(By.cssSelector("#box-most-popular li:nth-child(1)"));
 
             if (isElementPresent(By.cssSelector("td.options"))) {
@@ -30,7 +30,7 @@ public class LiteCartWorkWithCart extends AppTest {
 
             click(By.cssSelector("button[name='add_cart_product']"));
             counter++;
-            cartPresent = driver.findElement(By.cssSelector("span.quantity"));
+            WebElement cartPresent = driver.findElement(By.cssSelector("span.quantity"));
             wait.until(textToBePresentInElement(cartPresent, String.valueOf(counter)));
             driver.navigate().back();
         }
@@ -40,11 +40,11 @@ public class LiteCartWorkWithCart extends AppTest {
         int cartItems = driver.findElements(By.cssSelector("table.dataTable td.item")).size();
 
         while (cartItems > 0) {
+            productTable = driver.findElement(By.cssSelector("table.dataTable"));
             click(By.cssSelector("button[name=remove_cart_item]"));
-            wait.until(stalenessOf(driver.findElement(By.cssSelector("table.dataTable td.item"))));
+            wait.until(stalenessOf((productTable)));
             cartItems--;
         }
-        wait.until(stalenessOf(cartPresent));
         Assert.assertTrue("The text indicating that the cart is empty was not found",
                 driver.findElement(By.cssSelector("#page td.content")).getText().contains("There are no items in your cart."));
     }
