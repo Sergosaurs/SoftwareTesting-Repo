@@ -3,16 +3,19 @@ package ru.makj.mavenproject;
 import com.github.javafaker.Faker;
 import org.junit.After;
 import org.junit.Before;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.HashMap;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
@@ -23,16 +26,23 @@ public class AppTest {
 
     @Before
     public void setUp() {
-        driver = new FirefoxDriver();
+
+//        FirefoxOptions firefoxOptions = new FirefoxOptions();
+//        firefoxOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);
+//        driver = new FirefoxDriver(firefoxOptions);
+
 //        driver = new ChromeDriver();
+        driver = new FirefoxDriver();
+//        driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+
         driver.manage().window().maximize();
         wait = new WebDriverWait(driver, 10);
     }
 
     @After
     public void stop() {
-        driver.close();
+        driver.quit();
     }
 
     public void click(By locator) {
@@ -80,13 +90,13 @@ public class AppTest {
             driver.findElement(locator).sendKeys(text);
         }
     }
+
     /**
      * отправка текста в указанный элемент
      *
      * @param locator локатор
      * @param text    текст
-     * @param key    клавиша
-     *
+     * @param key     клавиша
      */
     public void sendTextWithKey(By locator, String text, Keys key) {
         String fieldText = driver.findElement(locator).getAttribute("value");
@@ -140,4 +150,29 @@ public class AppTest {
         user.put("randomNumber", String.valueOf(faker.number().digits(digits)));
         return user;
     }
+
+    /**
+     * Проверка наличия элемента без задержки
+     */
+    boolean isElementPresent(By locator) {
+        try {
+            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
+            return driver.findElements(locator).size() > 0;
+        } finally {
+            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        }
+    }
+
+    /**
+     * Ожидание появления нового окна
+     */
+    public ExpectedCondition<String> anyWindowOtherThan(Set<String> oldWindows) {
+        return driver -> {
+            Set<String> handles = driver.getWindowHandles();
+            handles.removeAll(oldWindows);
+            return handles.size() > 0 ? handles.iterator().next() : null;
+        };
+    }
+
+
 }

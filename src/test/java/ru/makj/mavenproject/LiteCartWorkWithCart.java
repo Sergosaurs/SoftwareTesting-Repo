@@ -8,7 +8,6 @@ import org.openqa.selenium.WebElement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.*;
 
@@ -47,19 +46,6 @@ public class LiteCartWorkWithCart extends AppTest {
         }
         Assert.assertTrue("The text indicating that the cart is empty was not found",
                 driver.findElement(By.cssSelector("#page td.content")).getText().contains("There are no items in your cart."));
-    }
-
-
-    /*
-    Проверка наличия элемента без задержки
-     */
-    boolean isElementPresent(By locator) {
-        try {
-            driver.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-            return driver.findElements(locator).size() > 0;
-        } finally {
-            driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-        }
     }
 
     /*
