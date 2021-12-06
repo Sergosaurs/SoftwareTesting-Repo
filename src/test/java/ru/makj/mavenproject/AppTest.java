@@ -1,42 +1,46 @@
 package ru.makj.mavenproject;
 
 import com.github.javafaker.Faker;
+import com.google.common.io.Files;
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.support.events.AbstractWebDriverEventListener;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 import static org.openqa.selenium.support.ui.ExpectedConditions.elementToBeClickable;
 
 public class AppTest {
+//    EventFiringWebDriver driver;
     WebDriver driver;
     WebDriverWait wait;
 
     @Before
     public void setUp() {
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("start-maximized");
+        LoggingPreferences logPrefs = new LoggingPreferences();
+        logPrefs.enable(LogType.BROWSER, Level.ALL);
+        options.setCapability("goog:loggingPrefs", logPrefs);
 
-//        FirefoxOptions firefoxOptions = new FirefoxOptions();
-//        firefoxOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);
-//        driver = new FirefoxDriver(firefoxOptions);
 
-//        driver = new ChromeDriver();
-        driver = new FirefoxDriver();
-//        driver.manage().timeouts().pageLoadTimeout(10, TimeUnit.SECONDS);
+        driver = new ChromeDriver(options);
+
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-
-        driver.manage().window().maximize();
         wait = new WebDriverWait(driver, 10);
     }
 
@@ -174,5 +178,29 @@ public class AppTest {
         };
     }
 
+    /*
+    Listener событий для логирования
+     */
+    public static class MyListener extends AbstractWebDriverEventListener {
 
+        @Override
+        public void afterFindBy(By by, WebElement element, WebDriver driver) {
+            System.out.println("'" + by + "'" + " found");
+        }
+
+        @Override
+        public void onException(Throwable throwable, WebDriver driver) {
+            System.out.println(throwable.getMessage());
+            String path = null;
+            try {
+                WebDriver augmentedDriver = new Augmenter().augment(driver);
+                File source = ((TakesScreenshot) augmentedDriver).getScreenshotAs(OutputType.FILE);
+                path = "./target/screenshots/" + "screenshot-" + System.currentTimeMillis() + ".png";
+                Files.copy(source, new File(path));
+            } catch (IOException e) {
+                System.out.println("Failed to capture screenshot: " + e.getMessage());
+            }
+            System.out.println("*************Screenshot saved in " + path + "**********************");
+        }
+    }
 }
