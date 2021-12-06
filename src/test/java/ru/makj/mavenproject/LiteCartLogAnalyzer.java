@@ -38,6 +38,7 @@ public class LiteCartLogAnalyzer extends AppTest {
                 System.err.println("WARNING: Found browser logs on the current page!: ");
                 logEntryList.forEach(System.out::println);
                 System.out.println("\n");
+            } finally {
                 driver.navigate().back();
             }
         }
