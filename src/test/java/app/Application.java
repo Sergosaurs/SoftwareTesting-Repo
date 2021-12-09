@@ -1,8 +1,9 @@
 package app;
 
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.CartPage;
@@ -23,8 +24,9 @@ public class Application {
     WebDriverWait wait;
 
     public Application() {
-        driver = new FirefoxDriver();
+        driver = new ChromeDriver();
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().window().maximize();
         wait = new WebDriverWait(driver, 10);
         generalPage = new GeneralPage(driver);
         productPage = new ProductPage(driver);
@@ -39,12 +41,24 @@ public class Application {
         generalPage.mostPopularPage();
     }
 
+    public void addProductToCart(Integer num) {
+        for (int i = 0; i < num; i++) {
+            generalPage.mostPopularPage();
+            productPage.requiredFieldValidation();
+            productPage.addToCart.click();
+            productPage.quantity = driver.findElement(By.cssSelector("span.quantity"));
+            wait.until(ExpectedConditions.textToBePresentInElement(productPage.quantity,
+                    String.valueOf(productPage.productCounter() + 1)));
+            driver.navigate().back();
+        }
+    }
+
     public void addProductToCart() {
-        productPage.requiredFieldValidation();
-        productPage.addToCart.click();
-        productPage.quantity = driver.findElement(By.cssSelector("span.quantity"));
-        wait.until(ExpectedConditions.textToBePresentInElement(productPage.quantity,
-                String.valueOf(productPage.productCounter() + 1)));
+            productPage.requiredFieldValidation();
+            productPage.addToCart.click();
+            productPage.quantity = driver.findElement(By.cssSelector("span.quantity"));
+            wait.until(ExpectedConditions.textToBePresentInElement(productPage.quantity,
+                    String.valueOf(productPage.productCounter() + 1)));
     }
 
     public void openCartPage() {
@@ -60,7 +74,11 @@ public class Application {
             wait.until(stalenessOf((cartPage.productTable)));
             numberOfElements--;
         }
-        cartPage.assertCartIsEmpty();
+    }
+
+    public void cartIsEmpty(){
+            Assert.assertTrue("The text indicating that the cart is empty was not found",
+                    cartPage.pageContent.getText().contains("There are no items in your cart."));
     }
 
     public void quit() {

@@ -1,6 +1,5 @@
 package pages;
 
-import org.junit.Assert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -37,8 +36,4 @@ public class CartPage extends Page {
         cartCheckout.click();
     }
 
-    public void assertCartIsEmpty(){
-        Assert.assertTrue("The text indicating that the cart is empty was not found",
-                pageContent.getText().contains("There are no items in your cart."));
-    }
 }
